@@ -1,2 +1,2 @@
 [lunanode]
-xxx.xxx.xxx.xxx ansible_ssh_user=ubuntu        ansible_ssh_private_key_file=/home/hme/.ssh/id_rsa
+zone1 ansible_ssh_user=ubuntu        ansible_ssh_private_key_file=/home/hme/.ssh/id_rsa
