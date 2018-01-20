@@ -6,11 +6,24 @@
    motd_warning: 'Apollo Formation Ansible Janvier 2018 '
    testserver: yes
   tasks:
-    - name: install apache
-      action: yum name=httpd state=installed
-    - name: configure apache
-      copy: src=files/httpd.conf dest=/etc/httpd/conf/httpd.conf
-    - name: restart apache
+    - name: update to latest httpd
+      yum:
+        name: httpd
+        state: latest
+      notify: restart httpd
+    - name: copy the httpd config
+      copy:
+        src: files/httpd.conf
+        dest: /etc/httpd/conf/httpd.conf
+      notify: restart httpd
+    - name: start htppd at boot
       service:
         name: httpd
-        state: restarted
+        state: started
+        enabled: yes
+
+  handlers:
+  - name: restart httpd
+    service:
+      name: httpd
+      state: restarted
