@@ -1,2 +1,2 @@
 [lunanode]
-site1 ansible_ssh_user=centos        ansible_ssh_private_key_file=/home/hme/.ssh/id_rsa
+apollo  ansible_ssh_user=centos  ansible_ssh_private_key_file=/home/hme/.ssh/id_rsa

@@ -1,28 +1,28 @@
 ---
 - hosts: all
   sudo: yes
-  vars:
-   apache_version: 2.6
-   motd_warning: 'Apollo Formation Ansible Janvier 2018 '
-   testserver: yes
   tasks:
-    - name: update to latest httpd
-      yum:
-        name: httpd
-        state: latest
-      notify: restart httpd
-    - name: copy the httpd config
-      copy:
-        src: files/httpd.conf
-        dest: /etc/httpd/conf/httpd.conf
-      notify: restart httpd
-    - name: start htppd at boot
-      service:
-        name: httpd
-        state: started
-        enabled: yes
+    - name: install git
+      yum: name=git state=latest
+    - name: checkout Qroud
+      git:
+        repo: 'https://github.com/smarthall/Qroud.git'
+        dest: /opt/apps/Qroud
+        force: no
+      notify:
+        - migrate db
+        - generate static
+        - restart httpd
 
   handlers:
+  - name: migrate db
+    command: ./manage.py migrate -all
+    args:
+      chdir: /opt/apps/Qroud
+  - name: generate static
+    command: ./manage.py collectstatic -c –noinput
+    args:
+      chdir: /opt/apps/Qroud
   - name: restart httpd
     service:
       name: httpd
