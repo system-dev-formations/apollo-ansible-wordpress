@@ -2,28 +2,7 @@
 - hosts: all
   sudo: yes
   tasks:
-    - name: install git
-      yum: name=git state=latest
-    - name: checkout Qroud
-      git:
-        repo: 'https://github.com/smarthall/Qroud.git'
-        dest: /opt/apps/Qroud
-        force: no
-      notify:
-        - migrate db
-        - generate static
-        - restart httpd
-
-  handlers:
-  - name: migrate db
-    command: ./manage.py migrate -all
-    args:
-      chdir: /opt/apps/Qroud
-  - name: generate static
-    command: ./manage.py collectstatic -c –noinput
-    args:
-      chdir: /opt/apps/Qroud
-  - name: restart httpd
-    service:
-      name: httpd
-      state: restarted
+    - name: configure BIND
+      template: src=templates/bind/named.conf.j2 dest=/etc/named_test.conf
+      owner: root
+      mode: 0640
